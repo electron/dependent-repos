@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "node script/build.js",
-    "release": "script/release.sh"
+    "release": "script/release.sh",
+    "test": "jest"
   }
 }
