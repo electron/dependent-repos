@@ -1,0 +1,23 @@
+{
+  "name": "repos-using-electron",
+  "description": "A LevelDB with metadata from every GitHub repository that depends on Electron",
+  "version": "2.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "bottleneck": "^2.1.0",
+    "cool-story-repo": "^1.2.0",
+    "dotenv-safe": "^5.0.1",
+    "ellipsize": "^0.0.3",
+    "human-interval": "^0.1.6",
+    "jest": "^22.4.2",
+    "standard": "^11.0.0"
+  },
+  "dependencies": {
+    "level": "^3.0.0"
+  },
+  "scripts": {
+    "build": "node script/build.js",
+    "release": "script/release.sh"
+  }
+}
