@@ -15,6 +15,6 @@ git add .
 git config user.email "zeke@sikelianos.com"
 git config user.name "Zeke Sikelianos"
 git commit -am "update database"
-npm version minor -m "bump minor to %s"
+# npm version minor -m "bump minor to %s"
 git push origin master --follow-tags
-npm publish
+# npm publish
