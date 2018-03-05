@@ -4,8 +4,7 @@ require('dotenv-safe').load()
 
 const fs = require('fs')
 const path = require('path')
-const repoNames = fs.readFileSync(path.join(__dirname, '../electron-dependents.txt'), 'utf8')
-  .split('\n')
+const csv = require('csv-parser')
 const db = require('../lib/db')
 const humanInterval = require('human-interval')
 const ellipsize = require('ellipsize')
@@ -16,32 +15,40 @@ const limiter = new Bottleneck({
   minTime: 500
 })
 
+const repoNames = []
 const freshRepos = []
 const deadRepos = []
 const jobStartTime = Date.now()
-const jobDuration = humanInterval('50 minutes')
-const repoTTL = humanInterval('80 days')
+const jobDuration = humanInterval(process.env.JOB_DURATION)
+const repoTTL = humanInterval(process.env.REPO_TTL)
 
-db.createReadStream()
-.on('data', ({key: repoName, value: repo}) => {
-  if (!repo) return
+fs.createReadStream('dependent-repos.csv')
+  .pipe(csv())
+  .on('data', function (data) {
+    repoNames.push(data['Repository Name with Owner'])
+  })
+  .on('end', triageExistingData)
 
-  if (repo.status === 404) {
-    deadRepos.push(repoName)
-    return
-  }
+function triageExistingData () {
+  db.createReadStream()
+  .on('data', ({key: repoName, value: repo}) => {
+    if (!repo) return
+    if (repo.status === 404) { deadRepos.push(repoName); return }
+    if (!repo.fetchedAt) return
+    if (new Date(repo.fetchedAt).getTime() + repoTTL < Date.now()) return
+    freshRepos.push(repoName)
+  })
+  .on('end', collectFreshData)
+}
 
-  if (!repo.fetchedAt) return
-  if (new Date(repo.fetchedAt).getTime() + repoTTL < Date.now()) return
-  freshRepos.push(repoName)
-})
-.on('end', () => {
-  console.log(`${repoNames.length} total repos dependent on electron`)
-  console.log(`${freshRepos.length} up-to-date repos already in database`)
-  console.log(`${deadRepos.length} dead repos already in database`)
+function collectFreshData () {
   const reposToUpdate = repoNames
     .filter(repoName => !freshRepos.includes(repoName) && !deadRepos.includes(repoName))
-  console.log(`${reposToUpdate.length} outdated repos`)
+
+  console.log(`${repoNames.length} total repos dependent on electron`)
+  console.log(`${freshRepos.length} up-to-date repos in database (last ${process.env.REPO_TTL})`)
+  console.log(`${deadRepos.length} dead repos in database`)
+  console.log(`${reposToUpdate.length} outdated or not-yet-fetched repos`)
   console.log('---------------------------------------')
 
   reposToUpdate.forEach(repoName => {
@@ -57,7 +64,7 @@ db.createReadStream()
       console.log('bottleneck error', err)
       process.exit()
     })
-})
+}
 
 async function updateRepo (repoName) {
   if (Date.now() > jobStartTime + jobDuration) {
