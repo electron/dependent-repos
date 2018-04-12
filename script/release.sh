@@ -5,7 +5,7 @@ set -o errexit    # always exit on error
 set -o pipefail   # honor exit codes when piping
 set -o nounset    # fail on unset variables
 
-git clone https://github.com/electron/repos-using-electron-part-deux module
+git clone https://github.com/electron/dependent-repos
 cd module
 npm install
 npm run build
