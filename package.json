@@ -18,6 +18,7 @@
     "level": "^3.0.0"
   },
   "scripts": {
+    "fetch-repo-names": "./script/fetch-repo-names",
     "build": "node script/build.js",
     "release": "script/release.sh",
     "test": "jest"
