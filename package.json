@@ -12,6 +12,8 @@
     "ellipsize": "^0.1.0",
     "human-interval": "^0.1.6",
     "jest": "^22.4.2",
+    "make-promises-safe": "^1.1.0",
+    "repo-images": "^1.0.1",
     "standard": "^11.0.0"
   },
   "dependencies": {
@@ -20,6 +22,7 @@
   "scripts": {
     "fetch-repo-names": "./script/fetch-repo-names",
     "build": "node script/build.js",
+    "icons": "node script/icons.js",
     "release": "script/release.sh",
     "test": "jest"
   }
