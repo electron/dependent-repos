@@ -11,6 +11,7 @@
     "dotenv-safe": "^5.0.1",
     "ellipsize": "^0.1.0",
     "human-interval": "^0.1.6",
+    "is-url": "^1.2.4",
     "jest": "^22.4.2",
     "make-promises-safe": "^1.1.0",
     "repo-images": "^1.0.1",
@@ -21,7 +22,8 @@
   },
   "scripts": {
     "fetch-repo-names": "./script/fetch-repo-names",
-    "build": "node script/build.js",
+    "build": "npm run collect && npm run icons",
+    "collect": "node script/collect.js",
     "icons": "node script/icons.js",
     "release": "script/release.sh",
     "test": "jest"
