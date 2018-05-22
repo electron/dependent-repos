@@ -9,7 +9,7 @@ const limiter = new Bottleneck({
   minTime: 500
 })
 let repos = []
-const maxrepos = 100
+const maxrepos = 10 * 1000
 
 db.createReadStream()
   .on('data', ({key:repoName, value:repo}) => {
@@ -27,10 +27,21 @@ db.createReadStream()
 
 async function fetchIcons (nameWithOwner) {
   const images = await repoImages(nameWithOwner, {token: process.env.GH_TOKEN})
+    .catch(err => {
+      console.error('no images found for repo', nameWithOwner)
+      console.error(err)
+    })
+  if (!images) return
+
   const icons = images.filter(image => isIcon(image.path))
-  // const rawgits = icons.map(icon => icon.rawgit)
 
   const record = await db.get(nameWithOwner)
+    .catch(err => {
+      console.error('record not found', nameWithOwner)
+      console.log(err)
+    })
+  if (!record) return
+
   record.icons = icons
   await db.put(nameWithOwner, record)
 
