@@ -13,13 +13,13 @@ db.createReadStream()
       .slice(0, 10)
       .forEach(repo => {
         const {nameWithOwner, icons} = repo
-        repo.biggestIcon = chain(icons).orderBy('size' , 'desc').first().value()
-        render(repo)
+        repo.icon = icons.find(icon => icon.isSquare)
+        if (repo.icon) render(repo)
       })
   })
 
 function render (repo) {
-  const {nameWithOwner, biggestIcon, description, forkCount} = repo
+  const {nameWithOwner, icon, description, forkCount} = repo
   const productName = (repo.packageJSON && repo.packageJSON.productName) || ''
 
   console.log(`
@@ -29,7 +29,7 @@ function render (repo) {
 
 ${forkCount} forks
 
-![](${biggestIcon.rawgit})
+![](${icon.rawgit})
 
 \`\`\`json
 ${JSON.stringify(repo, null, 2)}

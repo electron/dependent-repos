@@ -4,6 +4,8 @@ require('dotenv-safe').load()
 const db = require('..')
 const repoImages = require('repo-images')
 const Bottleneck = require('bottleneck')
+const imageSize = require('request-image-size')
+const {chain} = require('lodash')
 const limiter = new Bottleneck({
   maxConcurrent: 5,
   minTime: 500
@@ -33,7 +35,26 @@ async function fetchIcons (nameWithOwner) {
     })
   if (!images) return
 
-  const icons = images.filter(image => isIcon(image.path))
+  const icons = chain(images)
+    .filter(image => isIcon(image.path))
+    .orderBy('size', 'desc')
+    .value()
+  
+  // try to find a square image among the largest files
+  for (let i = 0; i < 5; i++) {
+    let icon = icons[i]
+    if (icon) {
+      const dimensions = await imageSize(icon.rawgit)
+        .catch(err => {
+          console.error('unable to fetch dimensions', icon)
+          console.error(err)
+        })
+      if (dimensions) {
+        dimensions.isSquare = dimensions.width && dimensions.height && dimensions.width === dimensions.height
+      }
+      Object.assign(icon, dimensions)
+    }
+  }
 
   const record = await db.get(nameWithOwner)
     .catch(err => {
