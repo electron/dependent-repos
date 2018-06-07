@@ -8,7 +8,7 @@
     "bottleneck": "^2.1.0",
     "cool-story-repo": "^1.2.0",
     "csv-parser": "^1.12.0",
-    "dotenv-safe": "^5.0.1",
+    "dotenv-safe": "^6.0.0",
     "ellipsize": "^0.1.0",
     "human-interval": "^0.1.6",
     "is-url": "^1.2.4",
