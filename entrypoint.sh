@@ -15,3 +15,5 @@ git config user.name "Electron Bot"
 git commit -am "chore: update dependent-repos database"
 
 git push origin master --follow-tags
+
+curl $SNITCH_URL
