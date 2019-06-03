@@ -26,7 +26,6 @@
     "build": "npm run collect && npm run icons",
     "collect": "node script/collect.js",
     "icons": "node script/icons.js",
-    "release": "script/release.sh",
     "test": "jest"
   }
 }
