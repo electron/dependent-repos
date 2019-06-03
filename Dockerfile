@@ -6,10 +6,9 @@ LABEL "com.github.actions.description"="Checks for and reports download stats fo
 LABEL "com.github.actions.icon"="package"
 LABEL "com.github.actions.color"="gray-dark"
 
-# install git
-RUN apt-get update \
-    apt-get upgrade \
-    apt-get install git
+# install git & bash
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git
 
 # Copy the package.json and package-lock.json
 COPY package*.json ./
