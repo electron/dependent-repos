@@ -5,5 +5,5 @@ workflow "Update Dependent Repos" {
 
 action "Update dependent repo db" {
   uses = "./"
-  secrets = ["GITHUB_TOKEN", "SNITCH_URL"]
+  secrets = ["GH_TOKEN"]
 }

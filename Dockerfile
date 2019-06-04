@@ -10,13 +10,5 @@ LABEL "com.github.actions.color"="gray-dark"
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git
 
-# Copy the package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy the rest of the repo's code
-COPY . .
-
+ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
