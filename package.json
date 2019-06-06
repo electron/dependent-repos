@@ -19,7 +19,7 @@
     "standard": "^11.0.0"
   },
   "dependencies": {
-    "level": "^3.0.0"
+    "level": "^5.0.1"
   },
   "scripts": {
     "fetch-repo-names": "./script/fetch-repo-names",
