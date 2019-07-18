@@ -3,10 +3,8 @@
 require('dotenv-safe').load()
 
 const fs = require('fs')
-const path = require('path')
 const csv = require('csv-parser')
 const db = require('../lib/db')
-const humanInterval = require('human-interval')
 const ellipsize = require('ellipsize')
 const coolStory = require('cool-story-repo')
 const Bottleneck = require('bottleneck')
@@ -19,8 +17,9 @@ const repoNames = []
 const freshRepos = []
 const deadRepos = []
 const jobStartTime = Date.now()
-const jobDuration = humanInterval(process.env.JOB_DURATION)
-const repoTTL = humanInterval(process.env.REPO_TTL)
+
+const JOB_DURATION = 3000000 // 50 minutes
+const REPO_TTL = 2592000000 // 30 days
 
 fs.createReadStream('dependent-repos.csv')
   .pipe(csv())
@@ -35,7 +34,7 @@ function triageExistingData () {
     if (!repo) return
     if (repo.status === 404) { deadRepos.push(repoName); return }
     if (!repo.fetchedAt) return
-    if (new Date(repo.fetchedAt).getTime() + repoTTL < Date.now()) return
+    if (new Date(repo.fetchedAt).getTime() + REPO_TTL < Date.now()) return
     freshRepos.push(repoName)
   })
   .on('end', collectFreshData)
@@ -46,7 +45,7 @@ function collectFreshData () {
     .filter(repoName => !freshRepos.includes(repoName) && !deadRepos.includes(repoName))
 
   console.log(`${repoNames.length} total repos dependent on electron`)
-  console.log(`${freshRepos.length} up-to-date repos in database (last ${process.env.REPO_TTL})`)
+  console.log(`${freshRepos.length} up-to-date repos in database (last ${REPO_TTL})`)
   console.log(`${deadRepos.length} dead repos in database`)
   console.log(`${reposToUpdate.length} outdated or not-yet-fetched repos`)
   console.log('---------------------------------------')
@@ -67,7 +66,7 @@ function collectFreshData () {
 }
 
 async function updateRepo (repoName) {
-  if (Date.now() > jobStartTime + jobDuration) {
+  if (Date.now() > jobStartTime + JOB_DURATION) {
     console.log('time is up! exiting')
     process.exit()
   }

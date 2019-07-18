@@ -10,7 +10,6 @@
     "csv-parser": "^2.0.0",
     "dotenv-safe": "^5.0.1",
     "ellipsize": "^0.1.0",
-    "human-interval": "^0.1.6",
     "is-url": "^1.2.4",
     "jest": "^22.4.2",
     "make-promises-safe": "^1.1.0",
