@@ -1,0 +1,16 @@
+name: Update Dependent Repos
+
+on:
+  schedules:
+  - cron: 0 9 * * 1
+
+jobs:
+  updateDependentRepoDb:
+    name: Update dependent repo database
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Update dependent repo db
+      uses: ./
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
