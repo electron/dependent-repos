@@ -18,9 +18,17 @@
     "standard": "^11.0.0"
   },
   "dependencies": {
-    "level": "^5.0.1"
+    "husky": "^3.0.5",
+    "level": "^5.0.1",
+    "yaml-lint": "^1.2.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "scripts": {
+    "lint": "yamllint ./.github/workflows/schedule.yml",
     "fetch-repo-names": "./script/fetch-repo-names",
     "build": "npm run collect && npm run icons",
     "collect": "node script/collect.js",
