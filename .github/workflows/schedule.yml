@@ -2,7 +2,7 @@ name: Update Dependent Repos
 
 on:
   schedule:
-  - cron: 0 9 * * 1
+  - cron: '0 9 * * 1'
 
 jobs:
   updateDependentRepoDb:
