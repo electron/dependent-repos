@@ -28,7 +28,7 @@
     }
   },
   "scripts": {
-    "lint": "yamllint ./.github/workflows/schedule.yml",
+    "lint": "standard && yamllint ./.github/workflows/schedule.yml",
     "fetch-repo-names": "./script/fetch-repo-names",
     "build": "npm run collect && npm run icons",
     "collect": "node script/collect.js",

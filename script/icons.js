@@ -14,14 +14,14 @@ let repos = []
 const maxrepos = 10 * 1000
 
 db.createReadStream()
-  .on('data', ({key:repoName, value:repo}) => {
+  .on('data', ({key: repoName, value: repo}) => {
     repos.push(repo)
   })
-  .on('end', async () => {    
+  .on('end', async () => {
     repos
       .filter(repo => repo.forkCount > 0)
       .sort((a, b) => b.forkCount - a.forkCount)
-      .slice(0,maxrepos)
+      .slice(0, maxrepos)
       .forEach(({nameWithOwner}) => {
         limiter.schedule(fetchIcons, nameWithOwner)
       })
@@ -39,7 +39,7 @@ async function fetchIcons (nameWithOwner) {
     .filter(image => isIcon(image.path))
     .orderBy('size', 'desc')
     .value()
-  
+
   // try to find a square image among the largest files
   for (let i = 0; i < 5; i++) {
     let icon = icons[i]
@@ -69,6 +69,6 @@ async function fetchIcons (nameWithOwner) {
   console.log('\n', nameWithOwner, icons)
 }
 
-function isIcon(filename) {
+function isIcon (filename) {
   return filename.match(/icon/i) && filename.match(/\.png$/)
 }

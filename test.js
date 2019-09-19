@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 const db = require('.')
 const isURL = require('is-url')
 

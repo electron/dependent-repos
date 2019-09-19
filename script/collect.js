@@ -30,14 +30,14 @@ fs.createReadStream('dependent-repos.csv')
 
 function triageExistingData () {
   db.createReadStream()
-  .on('data', ({key: repoName, value: repo}) => {
-    if (!repo) return
-    if (repo.status === 404) { deadRepos.push(repoName); return }
-    if (!repo.fetchedAt) return
-    if (new Date(repo.fetchedAt).getTime() + REPO_TTL < Date.now()) return
-    freshRepos.push(repoName)
-  })
-  .on('end', collectFreshData)
+    .on('data', ({key: repoName, value: repo}) => {
+      if (!repo) return
+      if (repo.status === 404) { deadRepos.push(repoName); return }
+      if (!repo.fetchedAt) return
+      if (new Date(repo.fetchedAt).getTime() + REPO_TTL < Date.now()) return
+      freshRepos.push(repoName)
+    })
+    .on('end', collectFreshData)
 }
 
 function collectFreshData () {
@@ -77,7 +77,7 @@ async function updateRepo (repoName) {
     console.log(repoName, '(good)')
     return result
   } catch (err) {
-    const result = await db.put(repoName, {
+    await db.put(repoName, {
       fetchedAt: new Date(),
       status: 404
     })
