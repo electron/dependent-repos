@@ -1,7 +1,7 @@
 name: Update Dependent Repos
 
 on:
-  schedules:
+  schedule:
   - cron: 0 9 * * 1
 
 jobs:
