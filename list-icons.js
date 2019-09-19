@@ -1,5 +1,4 @@
 const db = require('.')
-const {chain} = require('lodash')
 let repos = []
 
 db.createReadStream()

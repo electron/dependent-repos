@@ -4,7 +4,7 @@ const isURL = require('is-url')
 describe('reposUsingElectron', () => {
   test('gets a repo', async () => {
     const repo = await db.get('electron/spectron')
-    expect(repo.nameWithOwner).toBe('electron/spectron')
+    expect(repo.nameWithOwner).toBe('electron-userland/spectron')
   })
 
   test('saves an array of icon data on some repos', async () => {
